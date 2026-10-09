@@ -25,9 +25,22 @@ class ApiClient {
 
     try {
       const response = await fetch(url, options);
-      const data = await response.json();
+      const contentType = response.headers.get('content-type') || '';
+
+      let data;
+      if (contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        try {
+          data = JSON.parse(text);
+        } catch {
+          data = { error: response.status >= 500 ? 'Server is starting up or updating. Please try again in a few seconds.' : `Server error (${response.status})` };
+        }
+      }
+
       if (!response.ok) {
-        throw new Error(data.error || 'Server error occurred');
+        throw new Error(data.error || data.message || `Request failed (${response.status})`);
       }
       return data;
     } catch (err) {
