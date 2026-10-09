@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DailyWork – India's Local Labor Network | Worker & Admin Portals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- TOP AUDIO SPEAKING BANNER -->
+  <div class="audio-speaking-bar" id="audioSpeakingBar">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span>🔊</span>
+      <span id="audioSpeakingStatus">Reading aloud in selected language...</span>
+    </div>
+    <button class="stop-audio-btn" onclick="window.speechEngine.stop()">■ Stop Audio</button>
+  </div>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="nav-left">
+      <div class="logo" onclick="showGateway()">
+        Daily<span>Work</span>
+      </div>
+      <div class="nav-badge-portal" id="navBadgePortal">GATEWAY</div>
+    </div>
+    <div class="nav-right">
+      <select class="lang-select" id="langSelect" aria-label="Select Language">
+        <option value="en">English</option>
+        <option value="hi">हिंदी (Hindi)</option>
+        <option value="te">తెలుగు (Telugu)</option>
+        <option value="ta">தமிழ் (Tamil)</option>
+        <option value="kn">ಕನ್ನಡ (Kannada)</option>
+        <option value="ur">اردو (Urdu)</option>
+        <option value="bn">বাংলা (Bengali)</option>
+        <option value="mr">मराठी (Marathi)</option>
+      </select>
+
+      <button class="nav-btn" id="navRoleSwitchBtn" style="display:none" onclick="switchRole()">
+        <span>⇄</span> <span data-i18n="nav.switchRole">Switch Role</span>
+      </button>
+
+      <div class="notif-bell-btn" id="notifBellBtn" style="display:none" onclick="showAdminPage('registered')">
+        <span>🔔</span>
+        <div class="notif-count-badge" id="navNotifCount">1</div>
+      </div>
+
+      <div class="admin-user-pill" id="adminUserPill" style="display:none">
+        <div class="admin-user-avatar" id="adminAvatarDisplay">SK</div>
+        <span id="adminNameDisplay">Suresh Kumar</span>
+      </div>
+
+      <button class="nav-btn" id="navLogoutBtn" style="display:none" onclick="logout()">
+        <span>🚪</span> <span data-i18n="nav.logout">Log Out</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========================================== -->
+  <!-- 1. GATEWAY VIEW: ROLE SELECTOR ("WHO ARE YOU?") -->
+  <!-- ========================================== -->
+  <div class="gateway-screen" id="gatewayView">
+    <div class="gateway-tag" data-i18n="gateway.tag">India's Local Labor Network</div>
+    <h1 class="gateway-title" data-i18n-html="gateway.title">Welcome to <em>DailyWork</em></h1>
+    <p class="gateway-sub" data-i18n="gateway.sub">
+      Connecting verified daily wage workers with local contractors & employers in real-time.
+    </p>
+
+    <div class="section-title" style="margin-bottom:24px;font-size:1.6rem" data-i18n="gateway.question">
+      Who are you?
+    </div>
+
+    <div class="role-cards-container">
+      <!-- WORKER CARD -->
+      <div class="role-card worker-card" onclick="handleWorkerRoleChoice()">
+        <div>
+          <div class="role-icon">👷</div>
+          <div class="role-title" data-i18n="gateway.worker.title">I am a Worker</div>
+          <div class="role-desc" data-i18n="gateway.worker.desc">
+            Find daily work, register your trade skills, get direct work offers with guaranteed daily wages.
+          </div>
+        </div>
+        <button class="role-cta-btn" type="button">
+          <span data-i18n="gateway.worker.btn">👷 Enter Worker Portal</span> →
+        </button>
+      </div>
+
+      <!-- ADMIN CARD -->
+      <div class="role-card admin-card" onclick="handleAdminRoleChoice()">
+        <div>
+          <div class="role-icon">💼</div>
+          <div class="role-title" data-i18n="gateway.admin.title">I am an Employer / Admin</div>
+          <div class="role-desc" data-i18n="gateway.admin.desc">
+            Post job requests, hire skilled workers within 10–15 km, verify attendance, and manage daily sites.
+          </div>
+        </div>
+        <button class="role-cta-btn" type="button">
+          <span data-i18n="gateway.admin.btn">💼 Enter Admin Portal</span> →
+        </button>
+      </div>
+    </div>
+
+    <div class="gateway-features-strip" data-i18n="gateway.features">
+      ⚡ Instant Mobile OTP · 🗣️ 8 Languages with Audio Read-Aloud · 📍 10-15 km Radius Matching
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 2. WORKER PORTAL VIEW                      -->
+  <!-- ========================================== -->
+  <div class="portal-view" id="workerPortalView">
+    <!-- Worker Hero -->
+    <div class="worker-hero">
+      <div class="worker-hero-tag" data-i18n="worker.hero.tag">🔨 Find Work. Get Paid. Every Day.</div>
+      <h1 class="gateway-title" data-i18n-html="worker.hero.title">Register as a<br><em>Daily Worker</em></h1>
+      <p class="gateway-sub" style="margin-bottom:28px" data-i18n="worker.hero.sub">
+        Join thousands of skilled workers connecting with local employers. Get hired for the work you're best at.
+      </p>
+
+      <div style="display:flex;justify-content:center;gap:36px;flex-wrap:wrap;margin-bottom:20px">
+        <div style="text-align:center"><div class="stat-num">12,400+</div><div class="stat-lbl" data-i18n="worker.stat.workers">Registered Workers</div></div>
+        <div style="text-align:center"><div class="stat-num">890+</div><div class="stat-lbl" data-i18n="worker.stat.jobs">Jobs Posted Today</div></div>
+        <div style="text-align:center"><div class="stat-num">₹550</div><div class="stat-lbl" data-i18n="worker.stat.wage">Avg. Daily Wage</div></div>
+      </div>
+
+      <div class="worker-tabs-nav">
+        <button class="worker-tab-btn active" onclick="switchWorkerTab('register')">
+          <span data-i18n="worker.tabs.register">📝 Register Profile</span>
+        </button>
+        <button class="worker-tab-btn" onclick="switchWorkerTab('availableJobs')">
+          <span data-i18n="worker.tabs.availableJobs">💼 Available Jobs Near You</span>
+        </button>
+      </div>
+
+      <div style="font-size:0.75rem;color:var(--muted)">
+        <span data-i18n="worker.voicehint">🎤 Tap the mic next to any field to speak instead of typing</span> ·
+        <span>🔊 Tap speaker to listen in your language</span>
+      </div>
+    </div>
+
+    <div class="worker-main-wrap">
+      <!-- TAB 1: 5-STEP REGISTRATION -->
+      <div id="workerTabRegister">
+        <!-- Steps Indicator -->
+        <div class="steps" id="workerSteps">
+          <div class="step-item active" id="s1">
+            <div class="step-circle">1</div>
+            <div class="step-lbl" data-i18n="step.personal">Personal</div>
+          </div>
+          <div class="step-line" id="l1"></div>
+          <div class="step-item" id="s2">
+            <div class="step-circle">2</div>
+            <div class="step-lbl" data-i18n="step.skills">Skills</div>
+          </div>
+          <div class="step-line" id="l2"></div>
+          <div class="step-item" id="s3">
+            <div class="step-circle">3</div>
+            <div class="step-lbl" data-i18n="step.experience">Experience</div>
+          </div>
+          <div class="step-line" id="l3"></div>
+          <div class="step-item" id="s4">
+            <div class="step-circle">4</div>
+            <div class="step-lbl" data-i18n="step.availability">Availability</div>
+          </div>
+          <div class="step-line" id="l4"></div>
+          <div class="step-item" id="s5">
+            <div class="step-circle">5</div>
+            <div class="step-lbl" data-i18n="step.review">Review</div>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <!-- PANE 1: PERSONAL INFO -->
+          <div class="pane active" id="pane1">
+            <div class="section-title" data-i18n="p1.title">Personal Information</div>
+            <div class="section-desc" data-i18n="p1.desc">Tell us who you are so employers can find you.</div>
+
+            <div class="form-grid">
+              <div class="field-group">
+                <div class="label-row">
+                  <label id="lbl_fullName"><span data-i18n="p1.name">Full Name</span> <span class="required">*</span></label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_fullName')" aria-label="Read label aloud">🔊</button>
+                </div>
+                <div class="field-with-mic">
+                  <input type="text" id="fullName" data-i18n-ph="p1.name.ph" placeholder="e.g. Raju Sharma">
+                  <button class="mic-btn" type="button" onclick="startVoiceInput('fullName', this)" aria-label="Speak into field">🎤</button>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <div class="label-row">
+                  <label id="lbl_mobile"><span data-i18n="p1.mobile">Mobile Number</span> <span class="required">*</span></label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_mobile')" aria-label="Read label aloud">🔊</button>
+                </div>
+                <div class="field-with-mic">
+                  <input type="tel" id="mobile" placeholder="+91 98XXXXXXXX" maxlength="13">
+                  <button class="mic-btn" type="button" onclick="startVoiceInput('mobile', this)" aria-label="Speak into field">🎤</button>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <div class="label-row">
+                  <label id="lbl_age"><span data-i18n="p1.age">Age</span> <span class="required">*</span></label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_age')" aria-label="Read label aloud">🔊</button>
+                </div>
+                <div class="field-with-mic">
+                  <input type="number" id="age" placeholder="e.g. 28" min="18" max="65">
+                  <button class="mic-btn" type="button" onclick="startVoiceInput('age', this)" aria-label="Speak into field">🎤</button>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <div class="label-row">
+                  <label id="lbl_gender" data-i18n="p1.gender">Gender</label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_gender')" aria-label="Read label aloud">🔊</button>
+                </div>
+                <select id="gender">
+                  <option value="" data-i18n="p1.gender.select">Select gender</option>
+                  <option value="Male" data-i18n="p1.gender.male">Male</option>
+                  <option value="Female" data-i18n="p1.gender.female">Female</option>
+                  <option value="Prefer not to say" data-i18n="p1.gender.na">Prefer not to say</option>
+                </select>
+              </div>
+
+              <div class="field-group field-full">
+                <div class="label-row">
+                  <label id="lbl_address"><span data-i18n="p1.address">Current Address</span> <span class="required">*</span></label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_address')" aria-label="Read label aloud">🔊</button>
+                </div>
+                <div class="field-with-mic">
+                  <input type="text" id="address" data-i18n-ph="p1.address.ph" placeholder="Street, Area, City">
+                  <button class="mic-btn" type="button" onclick="startVoiceInput('address', this)" aria-label="Speak into field">🎤</button>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <div class="label-row">
+                  <label id="lbl_pin" data-i18n="p1.pin">Pincode</label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_pin')" aria-label="Read label aloud">🔊</button>
+                </div>
+                <div class="field-with-mic">
+                  <input type="text" id="pin" placeholder="500072" maxlength="6">
+                  <button class="mic-btn" type="button" onclick="startVoiceInput('pin', this)" aria-label="Speak into field">🎤</button>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <div class="label-row">
+                  <label id="lbl_aadhar" data-i18n="p1.aadhar">Aadhaar / ID Number</label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_aadhar')" aria-label="Read label aloud">🔊</button>
+                </div>
+                <div class="field-with-mic">
+                  <input type="text" id="aadhar" placeholder="XXXX XXXX XXXX">
+                  <button class="mic-btn" type="button" onclick="startVoiceInput('aadhar', this)" aria-label="Speak into field">🎤</button>
+                </div>
+                <span class="helper" style="font-size:0.75rem;color:var(--muted)" data-i18n="p1.aadhar.helper">
+                  Optional but recommended for verified badge
+                </span>
+              </div>
+
+              <div class="field-group field-full photo-upload" onclick="document.getElementById('photoInput').click()">
+                <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
+                <div class="photo-icon" id="photoIcon">📷</div>
+                <div class="photo-text" id="photoText" data-i18n-html="p1.photo">
+                  Click to upload your <span>profile photo</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-row">
+              <div></div>
+              <button class="btn-next" type="button" onclick="goToWorkerStep(2)">
+                <span data-i18n="btn.nextSkills">Next: Skills</span> →
+              </button>
+            </div>
+          </div>
+
+          <!-- PANE 2: SKILLS & WORK TYPE -->
+          <div class="pane" id="pane2">
+            <div class="section-title" data-i18n="p2.title">Skills & Work Type</div>
+            <div class="section-desc" data-i18n="p2.desc">Select all types of work you can do.</div>
+
+            <div class="field-group" style="margin-bottom:22px">
+              <div class="label-row">
+                <label id="lbl_cat"><span data-i18n="p2.primary">Primary Work Category</span> <span class="required">*</span></label>
+                <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_cat')">🔊</button>
+              </div>
+              <select id="primaryCategory">
+                <option value="" data-i18n="p2.primary.choose">Choose your main trade</option>
+                <option data-i18n="p2.cat.construction">🏗 Construction & Building</option>
+                <option data-i18n="p2.cat.plumbing">🔧 Plumbing</option>
+                <option data-i18n="p2.cat.electrical">⚡ Electrical Work</option>
+                <option data-i18n="p2.cat.carpentry">🪵 Carpentry & Furniture</option>
+                <option data-i18n="p2.cat.painting">🎨 Painting & Whitewashing</option>
+                <option data-i18n="p2.cat.farming">🌾 Farming & Agriculture</option>
+                <option data-i18n="p2.cat.loading">🚚 Loading & Unloading</option>
+                <option data-i18n="p2.cat.domestic">🏠 Domestic Help & Cleaning</option>
+                <option data-i18n="p2.cat.driving">🚗 Driving & Transport</option>
+                <option data-i18n="p2.cat.welding">🪚 Welding & Fabrication</option>
+                <option data-i18n="p2.cat.masonry">🧱 Masonry & Tiling</option>
+              </select>
+            </div>
+
+            <div class="field-group" style="margin-bottom:22px">
+              <div class="label-row">
+                <label id="lbl_addSkills" data-i18n="p2.additional">Additional Skills (select all that apply)</label>
+                <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_addSkills')">🔊</button>
+              </div>
+              <div class="skill-tags" id="skillTags">
+                <div class="skill-tag" onclick="toggleSkill(this)" data-i18n="skill.brick">🧱 Brick Laying</div>
+                <div class="skill-tag" onclick="toggleSkill(this)" data-i18n="skill.metal">🔩 Metal Fixing</div>
+                <div class="skill-tag" onclick="toggleSkill(this)" data-i18n="skill.wood">🪵 Woodwork</div>
+                <div class="skill-tag" onclick="toggleSkill(this)" data-i18n="skill.paint">🎨 Painting</div>
+                <div class="skill-tag" onclick="toggleSkill(this)" data-i18n="skill.repair">🔧 Repairs</div>
+                <div class="skill-tag" onclick="toggleSkill(this)" data-i18n="skill.plumb">🚿 Plumbing</div>
+                <div class="skill-tag" onclick="toggleSkill(this)" data-i18n="skill.electric">⚡ Electricals</div>
+                <div class="skill-tag" onclick="toggleSkill(this)" data-i18n="skill.farm">🌾 Farming</div>
+                <div class="skill-tag" onclick="toggleSkill(this)" data-i18n="skill.house">🏠 Housekeeping</div>
+                <div class="skill-tag" onclick="toggleSkill(this)" data-i18n="skill.load">🚚 Loading</div>
+                <div class="skill-tag" onclick="toggleSkill(this)" data-i18n="skill.drive">🚗 Driving</div>
+                <div class="skill-tag" onclick="toggleSkill(this)" data-i18n="skill.mason">🔨 Masonry</div>
+                <div class="skill-tag" onclick="toggleSkill(this)" data-i18n="skill.tile">🪣 Tiling</div>
+                <div class="skill-tag" onclick="toggleSkill(this)" data-i18n="skill.weld">🪚 Welding</div>
+              </div>
+            </div>
+
+            <div class="field-group" style="margin-bottom:22px">
+              <div class="label-row">
+                <label id="lbl_mode" data-i18n="p2.mode">Preferred Work Mode</label>
+                <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_mode')">🔊</button>
+              </div>
+              <div class="radio-chips" id="workMode">
+                <div class="radio-chip active" onclick="pickRadioChip('workMode', this)" data-i18n="mode.daily">Daily Contract</div>
+                <div class="radio-chip" onclick="pickRadioChip('workMode', this)" data-i18n="mode.weekly">Weekly</div>
+                <div class="radio-chip" onclick="pickRadioChip('workMode', this)" data-i18n="mode.monthly">Monthly</div>
+                <div class="radio-chip" onclick="pickRadioChip('workMode', this)" data-i18n="mode.any">Any</div>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <div class="label-row">
+                <label id="lbl_wage" data-i18n="p2.wage">Expected Daily Wage</label>
+                <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_wage')">🔊</button>
+              </div>
+              <div class="wage-display">
+                <span class="wage-val" id="wageVal">₹500</span>
+                <span class="wage-unit" data-i18n="p2.wage.unit">per day</span>
+              </div>
+              <input type="range" id="wageSlider" min="200" max="2500" step="50" value="500" oninput="updateWage(this.value)">
+              <div style="display:flex;justify-content:space-between;margin-top:6px">
+                <span style="font-size:0.75rem;color:var(--muted)">₹200</span>
+                <span style="font-size:0.75rem;color:var(--muted)">₹2500+</span>
+              </div>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn-back" type="button" onclick="goToWorkerStep(1)">← <span data-i18n="btn.back">Back</span></button>
+              <button class="btn-next" type="button" onclick="goToWorkerStep(3)"><span data-i18n="btn.nextExp">Next: Experience</span> →</button>
+            </div>
+          </div>
+
+          <!-- PANE 3: WORK EXPERIENCE -->
+          <div class="pane" id="pane3">
+            <div class="section-title" data-i18n="p3.title">Previous Work Experience</div>
+            <div class="section-desc" data-i18n="p3.desc">Help employers understand your background.</div>
+
+            <div class="form-grid">
+              <div class="field-group">
+                <div class="label-row">
+                  <label id="lbl_exp"><span data-i18n="p3.years">Years of Experience</span> <span class="required">*</span></label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_exp')">🔊</button>
+                </div>
+                <select id="experience">
+                  <option value="" data-i18n="p3.years.select">Select range</option>
+                  <option data-i18n="p3.years.lt1">Less than 1 year</option>
+                  <option data-i18n="p3.years.1-2">1 – 2 years</option>
+                  <option data-i18n="p3.years.3-5">3 – 5 years</option>
+                  <option data-i18n="p3.years.5-10">5 – 10 years</option>
+                  <option data-i18n="p3.years.10plus">10+ years</option>
+                </select>
+              </div>
+
+              <div class="field-group">
+                <div class="label-row">
+                  <label id="lbl_lastEmp" data-i18n="p3.employer">Last Employer / Contractor</label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_lastEmp')">🔊</button>
+                </div>
+                <div class="field-with-mic">
+                  <input type="text" id="lastEmployer" data-i18n-ph="p3.employer.ph" placeholder="Name or Company">
+                  <button class="mic-btn" type="button" onclick="startVoiceInput('lastEmployer', this)" aria-label="Speak into field">🎤</button>
+                </div>
+              </div>
+
+              <div class="field-group field-full">
+                <div class="label-row">
+                  <label id="lbl_prevLoc" data-i18n="p3.prevloc">Previous Job Location(s)</label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_prevLoc')">🔊</button>
+                </div>
+                <div class="field-with-mic">
+                  <input type="text" id="prevLocation" data-i18n-ph="p3.prevloc.ph" placeholder="e.g. Kukatpally, Hyderabad">
+                  <button class="mic-btn" type="button" onclick="startVoiceInput('prevLocation', this)" aria-label="Speak into field">🎤</button>
+                </div>
+              </div>
+
+              <div class="field-group field-full">
+                <div class="label-row">
+                  <label id="lbl_workDesc"><span data-i18n="p3.workdesc">Describe Your Work Experience</span> <span class="required">*</span></label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_workDesc')">🔊</button>
+                </div>
+                <div class="field-with-mic">
+                  <textarea id="workDesc" data-i18n-ph="p3.workdesc.ph" placeholder="Briefly describe what type of work you've done..."></textarea>
+                  <button class="mic-btn" type="button" onclick="startVoiceInput('workDesc', this)" aria-label="Speak into field">🎤</button>
+                </div>
+              </div>
+
+              <div class="field-group field-full">
+                <div class="label-row">
+                  <label id="lbl_projects" data-i18n="p3.projects">Notable Projects / Achievements</label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_projects')">🔊</button>
+                </div>
+                <div class="field-with-mic">
+                  <textarea id="projects" data-i18n-ph="p3.projects.ph" placeholder="e.g. Worked on 5-floor building in Gachibowli for 8 months..."></textarea>
+                  <button class="mic-btn" type="button" onclick="startVoiceInput('projects', this)" aria-label="Speak into field">🎤</button>
+                </div>
+              </div>
+            </div>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:24px 0">
+            <div class="section-title" style="font-size:1.1rem;margin-bottom:14px" data-i18n="p3.eduTitle">Education & Certifications</div>
+
+            <div class="form-grid">
+              <div class="field-group">
+                <div class="label-row">
+                  <label id="lbl_edu" data-i18n="p3.education">Highest Education</label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_edu')">🔊</button>
+                </div>
+                <select id="education">
+                  <option value="" data-i18n="p3.education.select">Select</option>
+                  <option data-i18n="p3.education.none">No formal education</option>
+                  <option data-i18n="p3.education.primary">Primary School (up to 5th)</option>
+                  <option data-i18n="p3.education.middle">Middle School (up to 8th)</option>
+                  <option data-i18n="p3.education.10th">10th Pass (SSC)</option>
+                  <option data-i18n="p3.education.12th">12th Pass (HSC)</option>
+                  <option data-i18n="p3.education.diploma">Diploma / ITI</option>
+                  <option data-i18n="p3.education.grad">Graduate</option>
+                </select>
+              </div>
+
+              <div class="field-group">
+                <div class="label-row">
+                  <label id="lbl_certs" data-i18n="p3.certs">Any Certifications / Training</label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_certs')">🔊</button>
+                </div>
+                <div class="field-with-mic">
+                  <input type="text" id="certs" data-i18n-ph="p3.certs.ph" placeholder="e.g. ITI Electrician, NSDC Training">
+                  <button class="mic-btn" type="button" onclick="startVoiceInput('certs', this)" aria-label="Speak into field">🎤</button>
+                </div>
+              </div>
+
+              <div class="field-group field-full">
+                <div class="label-row">
+                  <label id="lbl_langs" data-i18n="p3.langs">Languages Known</label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_langs')">🔊</button>
+                </div>
+                <div class="radio-chips" id="languages" style="margin-top:4px">
+                  <div class="radio-chip active" onclick="toggleLangChip(this)" data-i18n="lang.telugu">Telugu</div>
+                  <div class="radio-chip active" onclick="toggleLangChip(this)" data-i18n="lang.hindi">Hindi</div>
+                  <div class="radio-chip" onclick="toggleLangChip(this)" data-i18n="lang.english">English</div>
+                  <div class="radio-chip" onclick="toggleLangChip(this)" data-i18n="lang.urdu">Urdu</div>
+                  <div class="radio-chip" onclick="toggleLangChip(this)" data-i18n="lang.tamil">Tamil</div>
+                  <div class="radio-chip" onclick="toggleLangChip(this)" data-i18n="lang.kannada">Kannada</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn-back" type="button" onclick="goToWorkerStep(2)">← <span data-i18n="btn.back">Back</span></button>
+              <button class="btn-next" type="button" onclick="goToWorkerStep(4)"><span data-i18n="btn.nextAvail">Next: Availability</span> →</button>
+            </div>
+          </div>
+
+          <!-- PANE 4: AVAILABILITY -->
+          <div class="pane" id="pane4">
+            <div class="section-title" data-i18n="p4.title">Availability & Preferences</div>
+            <div class="section-desc" data-i18n="p4.desc">Let employers know when you're free to work.</div>
+
+            <div class="field-group" style="margin-bottom:24px">
+              <div class="label-row">
+                <label id="lbl_days"><span data-i18n="p4.days">Days Available</span> <span class="required">*</span></label>
+                <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_days')">🔊</button>
+              </div>
+              <div class="avail-grid" id="dayGrid">
+                <button class="day-btn selected" type="button" onclick="toggleDay(this)" data-i18n="day.mon">Mon</button>
+                <button class="day-btn selected" type="button" onclick="toggleDay(this)" data-i18n="day.tue">Tue</button>
+                <button class="day-btn selected" type="button" onclick="toggleDay(this)" data-i18n="day.wed">Wed</button>
+                <button class="day-btn selected" type="button" onclick="toggleDay(this)" data-i18n="day.thu">Thu</button>
+                <button class="day-btn selected" type="button" onclick="toggleDay(this)" data-i18n="day.fri">Fri</button>
+                <button class="day-btn" type="button" onclick="toggleDay(this)" data-i18n="day.sat">Sat</button>
+                <button class="day-btn" type="button" onclick="toggleDay(this)" data-i18n="day.sun">Sun</button>
+              </div>
+            </div>
+
+            <div class="form-grid" style="margin-bottom:20px">
+              <div class="field-group">
+                <label data-i18n="p4.start">Preferred Start Time</label>
+                <select id="startTime">
+                  <option>6:00 AM</option>
+                  <option>7:00 AM</option>
+                  <option selected>8:00 AM</option>
+                  <option>9:00 AM</option>
+                  <option>10:00 AM</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label data-i18n="p4.end">Preferred End Time</label>
+                <select id="endTime">
+                  <option>2:00 PM</option>
+                  <option>4:00 PM</option>
+                  <option selected>6:00 PM</option>
+                  <option>8:00 PM</option>
+                  <option data-i18n="p4.end.night">Night Shift</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field-group" style="margin-bottom:20px">
+              <div class="label-row">
+                <label id="lbl_travel" data-i18n="p4.travel">Travel Willingness</label>
+                <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_travel')">🔊</button>
+              </div>
+              <div class="radio-chips" id="travel">
+                <div class="radio-chip active" onclick="pickRadioChip('travel', this)" data-i18n="travel.local">Local area only</div>
+                <div class="radio-chip" onclick="pickRadioChip('travel', this)" data-i18n="travel.10">Upto 10 km</div>
+                <div class="radio-chip" onclick="pickRadioChip('travel', this)" data-i18n="travel.30">Upto 30 km</div>
+                <div class="radio-chip" onclick="pickRadioChip('travel', this)" data-i18n="travel.city">Anywhere in city</div>
+                <div class="radio-chip" onclick="pickRadioChip('travel', this)" data-i18n="travel.relocate">Willing to relocate</div>
+              </div>
+            </div>
+
+            <div class="field-group" style="margin-bottom:20px">
+              <div class="label-row">
+                <label id="lbl_tools" data-i18n="p4.tools">Do you have your own tools / equipment?</label>
+                <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_tools')">🔊</button>
+              </div>
+              <div class="radio-chips" id="tools">
+                <div class="radio-chip active" onclick="pickRadioChip('tools', this)" data-i18n="tools.yes">Yes, fully equipped</div>
+                <div class="radio-chip" onclick="pickRadioChip('tools', this)" data-i18n="tools.partial">Partially</div>
+                <div class="radio-chip" onclick="pickRadioChip('tools', this)" data-i18n="tools.no">No – need from employer</div>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <div class="label-row">
+                <label id="lbl_emerg" data-i18n="p4.emergency">Emergency Contact Number</label>
+                <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_emerg')">🔊</button>
+              </div>
+              <div class="field-with-mic">
+                <input type="tel" id="emergContact" placeholder="+91 98XXXXXXXX">
+                <button class="mic-btn" type="button" onclick="startVoiceInput('emergContact', this)" aria-label="Speak into field">🎤</button>
+              </div>
+              <span class="helper" style="font-size:0.75rem;color:var(--muted)" data-i18n="p4.emergency.helper">
+                For safety – only shared with verified employers
+              </span>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn-back" type="button" onclick="goToWorkerStep(3)">← <span data-i18n="btn.back">Back</span></button>
+              <button class="btn-next" type="button" onclick="goToWorkerStep(5)"><span data-i18n="btn.review">Review & Submit</span> →</button>
+            </div>
+          </div>
+
+          <!-- PANE 5: REVIEW -->
+          <div class="pane" id="pane5">
+            <div class="section-title" data-i18n="p5.title">Review Your Details</div>
+            <div class="section-desc" data-i18n="p5.desc">Check everything before submitting your registration.</div>
+
+            <div class="review-grid" id="reviewGrid"></div>
+
+            <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px;margin:20px 0 10px">
+              <input type="checkbox" id="consent" style="width:18px;height:18px;margin-top:2px;accent-color:var(--accent);flex-shrink:0" checked>
+              <div class="label-row">
+                <label for="consent" style="text-transform:none;letter-spacing:0;font-size:0.85rem;color:var(--muted);cursor:pointer" id="lbl_consent" data-i18n="p5.consent">
+                  I agree to the Terms of Service and Privacy Policy. I confirm the information provided is accurate and consent to employers contacting me.
+                </label>
+                <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_consent')">🔊</button>
+              </div>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn-back" type="button" onclick="goToWorkerStep(4)">← <span data-i18n="btn.back">Back</span></button>
+              <button class="btn-next" type="button" id="submitRegBtn" onclick="submitWorkerRegistration()">
+                ✓ <span data-i18n="btn.submit">Submit Registration</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- SUCCESS PANE -->
+          <div class="pane" id="paneSuccess">
+            <div class="success-screen">
+              <div class="success-icon">✓</div>
+              <div class="success-title" data-i18n="success.title">You're Registered!</div>
+              <p class="success-sub" data-i18n="success.sub">
+                Your profile is now live! Employers in your area can now send you direct work offers.
+              </p>
+              <div class="worker-id" id="workerIdDisplay">DW-000000</div>
+              <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+                <button class="btn-primary" type="button" onclick="switchWorkerTab('availableJobs')" data-i18n="success.viewJobs">
+                  Browse Available Jobs Now
+                </button>
+                <button class="btn-secondary" type="button" onclick="window.location.reload()" data-i18n="success.again">
+                  Register Another Worker
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: AVAILABLE JOBS -->
+      <div id="workerTabAvailableJobs" style="display:none">
+        <div style="margin-bottom:24px">
+          <div class="section-title" data-i18n="jobs.title">Live Job Requests Near You</div>
+          <div class="section-desc" data-i18n="jobs.sub">
+            Employers in your 10–15 km radius are actively seeking workers for these shifts.
+          </div>
+        </div>
+        <div class="jobs-grid" id="availableJobsList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 3. ADMIN MANAGEMENT PORTAL                 -->
+  <!-- ========================================== -->
+  <div class="portal-view" id="adminPortalView">
+    <div class="admin-app-layout">
+      <!-- SIDEBAR -->
+      <aside class="admin-sidebar">
+        <div class="sidebar-label" data-i18n="admin.main">Main</div>
+        <div class="sidebar-link active" onclick="showAdminPage('dashboard', this)">
+          <span>📊</span> <span data-i18n="admin.dashboard">Dashboard</span>
+        </div>
+        <div class="sidebar-link" onclick="showAdminPage('post-job', this)">
+          <span>📋</span> <span data-i18n="admin.postJob">Post Job Request</span>
+        </div>
+        <div class="sidebar-link" onclick="showAdminPage('my-jobs', this)">
+          <span>🗂</span> <span data-i18n="admin.myJobs">My Job Posts</span>
+        </div>
+
+        <div class="sidebar-label" data-i18n="admin.workers">Workers</div>
+        <div class="sidebar-link" onclick="showAdminPage('registered', this)">
+          <span>👥</span> <span data-i18n="admin.regWorkers">Registered Workers</span>
+          <span class="badge-count" id="sidebarRegCount">7</span>
+        </div>
+        <div class="sidebar-link" onclick="showAdminPage('live-list', this)">
+          <span>🟢</span> <span data-i18n="admin.liveList">Live Work List</span>
+        </div>
+
+        <div class="sidebar-label" data-i18n="admin.account">Account</div>
+        <div class="sidebar-link" onclick="showAdminPage('settings', this)">
+          <span>⚙️</span> <span data-i18n="admin.settings">Settings</span>
+        </div>
+      </aside>
+
+      <!-- ADMIN MAIN CONTENT -->
+      <main class="admin-main">
+        <!-- ══ DASHBOARD ══ -->
+        <div class="admin-page active" id="admin-page-dashboard">
+          <div class="page-header">
+            <div>
+              <div class="page-title" data-i18n="admin.greeting">Good day, Suresh 👋</div>
+              <div class="page-sub" data-i18n="admin.greetingSub">
+                Here's what's happening across your job posts and site crews today.
+              </div>
+            </div>
+            <button class="btn-primary" onclick="showAdminPage('post-job')">
+              <span data-i18n="admin.postNewBtn">+ Post New Job</span>
+            </button>
+          </div>
+
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="stat-top"><span class="stat-icon">📋</span><span class="stat-change">+2 today</span></div>
+              <div class="stat-num" id="dashActiveJobs">3</div>
+              <div class="stat-lbl" data-i18n="admin.stat.activeJobs">Active Job Posts</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-top"><span class="stat-icon">👷</span><span class="stat-change">↑ 40%</span></div>
+              <div class="stat-num" id="dashWorkersReg">7</div>
+              <div class="stat-lbl" data-i18n="admin.stat.workersReg">Workers Registered</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-top"><span class="stat-icon">📍</span><span class="stat-change">10–15 km</span></div>
+              <div class="stat-num" id="dashActiveRegions">2</div>
+              <div class="stat-lbl" data-i18n="admin.stat.activeReg">Active Regions</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-top"><span class="stat-icon">⏳</span><span class="stat-change">1 pending</span></div>
+              <div class="stat-num">14</div>
+              <div class="stat-lbl" data-i18n="admin.stat.nextJob">Hours to Next Job</div>
+            </div>
+          </div>
+
+          <!-- Countdown -->
+          <div class="countdown-card">
+            <div class="countdown-icon">⏱</div>
+            <div>
+              <div class="countdown-label" data-i18n="admin.countdown.label">Next job starts in</div>
+              <div class="countdown-timer">
+                <div class="ct-block"><div class="ct-num" id="ct-h">13</div><div class="ct-lbl">Hrs</div></div>
+                <div class="ct-sep">:</div>
+                <div class="ct-block"><div class="ct-num" id="ct-m">45</div><div class="ct-lbl">Min</div></div>
+                <div class="ct-sep">:</div>
+                <div class="ct-block"><div class="ct-num" id="ct-s">22</div><div class="ct-lbl">Sec</div></div>
+              </div>
+            </div>
+            <div class="reg-window">
+              <div style="font-size:0.75rem;color:var(--muted)" data-i18n="admin.countdown.window">Registration window open until</div>
+              <strong>Today 10:00 PM</strong>
+              <div style="font-size:0.72rem;color:var(--muted);margin-top:4px">Workers within 10–15 km notified</div>
+            </div>
+          </div>
+
+          <div class="section-title" style="margin-bottom:14px" data-i18n="admin.recentJobs">Recent Job Posts</div>
+          <div class="job-cards" id="dashboardJobsContainer"></div>
+        </div>
+
+        <!-- ══ POST JOB REQUEST ══ -->
+        <div class="admin-page" id="admin-page-post-job">
+          <div class="page-header">
+            <div>
+              <div class="page-title" data-i18n="pj.title">Post a Job Request</div>
+              <div class="page-sub" data-i18n="pj.sub">
+                Fill in details before the day of work. Workers in your 10–15 km radius will be notified immediately.
+              </div>
+            </div>
+          </div>
+
+          <!-- Step Indicator -->
+          <div style="display:flex;align-items:center;gap:0;margin-bottom:30px">
+            <div class="step-item active" id="ajs1" style="display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div class="step-circle">1</div>
+              <div style="font-size:0.65rem;color:var(--accent);text-transform:uppercase" data-i18n="pj.s1">Job Details</div>
+            </div>
+            <div style="flex:1;height:2px;background:var(--border);margin:0 8px 18px;max-width:80px"></div>
+            <div class="step-item" id="ajs2" style="display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div class="step-circle" style="background:transparent;border-color:var(--border);color:var(--muted)">2</div>
+              <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase" data-i18n="pj.s2">Location</div>
+            </div>
+            <div style="flex:1;height:2px;background:var(--border);margin:0 8px 18px;max-width:80px"></div>
+            <div class="step-item" id="ajs3" style="display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div class="step-circle" style="background:transparent;border-color:var(--border);color:var(--muted)">3</div>
+              <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase" data-i18n="pj.s3">Confirm</div>
+            </div>
+          </div>
+
+          <!-- STEP 1: Details -->
+          <div id="adminJStep1">
+            <div class="form-card">
+              <div class="section-title" data-i18n="pj.s1">Job Details</div>
+              <div class="field-group" style="margin-bottom:20px">
+                <div class="label-row">
+                  <label id="lbl_adj_cat"><span data-i18n="pj.cat">Primary Work Category</span> <span class="required">*</span></label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_adj_cat')">🔊</button>
+                </div>
+                <div class="skill-tags" id="adminJobTypeChips">
+                  <div class="skill-tag selected type-chip" onclick="selectAdminJobTypeChip(this)" data-t="Construction & Building">🏗 Construction</div>
+                  <div class="skill-tag type-chip" onclick="selectAdminJobTypeChip(this)" data-t="Plumbing">🔧 Plumbing</div>
+                  <div class="skill-tag type-chip" onclick="selectAdminJobTypeChip(this)" data-t="Electrical Work">⚡ Electrical</div>
+                  <div class="skill-tag type-chip" onclick="selectAdminJobTypeChip(this)" data-t="Carpentry & Furniture">🪵 Carpentry</div>
+                  <div class="skill-tag type-chip" onclick="selectAdminJobTypeChip(this)" data-t="Painting & Whitewashing">🎨 Painting</div>
+                  <div class="skill-tag type-chip" onclick="selectAdminJobTypeChip(this)" data-t="Farming & Agriculture">🌾 Farming</div>
+                  <div class="skill-tag type-chip" onclick="selectAdminJobTypeChip(this)" data-t="Loading & Unloading">🚚 Loading</div>
+                  <div class="skill-tag type-chip" onclick="selectAdminJobTypeChip(this)" data-t="Domestic Help & Cleaning">🏠 Cleaning</div>
+                  <div class="skill-tag type-chip" onclick="selectAdminJobTypeChip(this)" data-t="Driving & Transport">🚗 Driving</div>
+                  <div class="skill-tag type-chip" onclick="selectAdminJobTypeChip(this)" data-t="Welding & Fabrication">🪚 Welding</div>
+                  <div class="skill-tag type-chip" onclick="selectAdminJobTypeChip(this)" data-t="Masonry & Tiling">🧱 Masonry</div>
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="field-group">
+                  <div class="label-row">
+                    <label id="lbl_adj_count"><span data-i18n="pj.count">Number of Workers Required</span> <span class="required">*</span></label>
+                    <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_adj_count')">🔊</button>
+                  </div>
+                  <div class="stepper" style="margin-top:4px">
+                    <button class="step-btn" type="button" onclick="changeAdminWorkerCount(-1)">−</button>
+                    <div class="step-val" id="adminWorkerCount">3</div>
+                    <button class="step-btn" type="button" onclick="changeAdminWorkerCount(1)">+</button>
+                  </div>
+                </div>
+
+                <div class="field-group">
+                  <div class="label-row">
+                    <label id="lbl_adj_skill" data-i18n="pj.skill">Skill Level Required</label>
+                    <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_adj_skill')">🔊</button>
+                  </div>
+                  <div class="radio-chips" id="adminSkillLevel" style="margin-top:4px">
+                    <div class="radio-chip active" onclick="pickRadioChip('adminSkillLevel', this)" data-i18n="pj.skill.any">Any</div>
+                    <div class="radio-chip" onclick="pickRadioChip('adminSkillLevel', this)" data-i18n="pj.skill.beg">Beginner</div>
+                    <div class="radio-chip" onclick="pickRadioChip('adminSkillLevel', this)" data-i18n="pj.skill.exp">Experienced</div>
+                    <div class="radio-chip" onclick="pickRadioChip('adminSkillLevel', this)" data-i18n="pj.skill.exp2">Expert</div>
+                  </div>
+                </div>
+
+                <div class="field-group">
+                  <div class="label-row">
+                    <label id="lbl_adj_date"><span data-i18n="pj.date">Date of Work</span> <span class="required">*</span></label>
+                    <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_adj_date')">🔊</button>
+                  </div>
+                  <input type="date" id="workDate">
+                </div>
+
+                <div class="field-group">
+                  <div class="label-row">
+                    <label id="lbl_adj_start"><span data-i18n="pj.start">Work Start Time</span> <span class="required">*</span></label>
+                    <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_adj_start')">🔊</button>
+                  </div>
+                  <select id="workStart">
+                    <option>6:00 AM</option>
+                    <option>7:00 AM</option>
+                    <option selected>8:00 AM</option>
+                    <option>9:00 AM</option>
+                    <option>10:00 AM</option>
+                  </select>
+                </div>
+
+                <div class="field-group">
+                  <div class="label-row">
+                    <label id="lbl_adj_dur" data-i18n="pj.dur">Expected Duration</label>
+                    <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_adj_dur')">🔊</button>
+                  </div>
+                  <select id="workDur">
+                    <option>Half day (4 hrs)</option>
+                    <option selected>Full day (8 hrs)</option>
+                    <option>2 days</option>
+                    <option>Weekly contract</option>
+                  </select>
+                </div>
+
+                <div class="field-group">
+                  <div class="label-row">
+                    <label id="lbl_adj_wage" data-i18n="pj.wage">Daily Wage Offered (₹)</label>
+                    <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_adj_wage')">🔊</button>
+                  </div>
+                  <div class="field-with-mic">
+                    <input type="number" id="wageOffer" placeholder="e.g. 550" min="200" max="5000">
+                    <button class="mic-btn" type="button" onclick="startVoiceInput('wageOffer', this)" aria-label="Speak into field">🎤</button>
+                  </div>
+                </div>
+
+                <div class="field-group field-full">
+                  <div class="label-row">
+                    <label id="lbl_adj_desc"><span data-i18n="pj.desc">Job Description</span> <span class="required">*</span></label>
+                    <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_adj_desc')">🔊</button>
+                  </div>
+                  <div class="field-with-mic">
+                    <textarea id="jobDesc" data-i18n-ph="pj.desc.ph" placeholder="Describe the work in detail — site conditions, tools needed, tasks..."></textarea>
+                    <button class="mic-btn" type="button" onclick="startVoiceInput('jobDesc', this)" aria-label="Speak into field">🎤</button>
+                  </div>
+                </div>
+
+                <div class="field-group field-full">
+                  <div class="label-row">
+                    <label id="lbl_adj_spec" data-i18n="pj.special">Special Requirements / Instructions</label>
+                    <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_adj_spec')">🔊</button>
+                  </div>
+                  <div class="field-with-mic">
+                    <input type="text" id="specialReq" placeholder="e.g. Must bring own tools, safety boots required">
+                    <button class="mic-btn" type="button" onclick="startVoiceInput('specialReq', this)" aria-label="Speak into field">🎤</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="btn-row">
+                <div></div>
+                <button class="btn-primary" type="button" onclick="goAdminJobStep(2)">
+                  Next: Set Location →
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 2: Location -->
+          <div id="adminJStep2" style="display:none">
+            <div class="form-card">
+              <div class="section-title" data-i18n="pj.s2">Location</div>
+              <div class="section-desc">Workers within 10–15 km of this site will receive the work offer.</div>
+
+              <div class="form-grid">
+                <div class="field-group field-full">
+                  <div class="label-row">
+                    <label id="lbl_adj_site"><span data-i18n="pj.site">Work Site Address</span> <span class="required">*</span></label>
+                    <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_adj_site')">🔊</button>
+                  </div>
+                  <div class="field-with-mic">
+                    <input type="text" id="siteAddr" data-i18n-ph="pj.site.ph" placeholder="e.g. Plot 42, KPHB Colony, Kukatpally, Hyderabad">
+                    <button class="mic-btn" type="button" onclick="startVoiceInput('siteAddr', this)" aria-label="Speak into field">🎤</button>
+                  </div>
+                </div>
+
+                <div class="field-group">
+                  <div class="label-row">
+                    <label id="lbl_adj_pin"><span data-i18n="pj.pin">Pincode</span> <span class="required">*</span></label>
+                    <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_adj_pin')">🔊</button>
+                  </div>
+                  <div class="field-with-mic">
+                    <input type="text" id="sitePincode" placeholder="500072" maxlength="6">
+                    <button class="mic-btn" type="button" onclick="startVoiceInput('sitePincode', this)" aria-label="Speak into field">🎤</button>
+                  </div>
+                </div>
+
+                <div class="field-group">
+                  <div class="label-row">
+                    <label id="lbl_adj_landmark" data-i18n="pj.landmark">Landmark</label>
+                    <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_adj_landmark')">🔊</button>
+                  </div>
+                  <div class="field-with-mic">
+                    <input type="text" id="siteLandmark" placeholder="Near JNTU Main Gate">
+                    <button class="mic-btn" type="button" onclick="startVoiceInput('siteLandmark', this)" aria-label="Speak into field">🎤</button>
+                  </div>
+                </div>
+
+                <div class="field-group">
+                  <div class="label-row">
+                    <label id="lbl_adj_district" data-i18n="pj.district">District / Area</label>
+                    <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_adj_district')">🔊</button>
+                  </div>
+                  <select id="siteDistrict">
+                    <option>Hyderabad – Kukatpally</option>
+                    <option>Hyderabad – Gachibowli</option>
+                    <option>Hyderabad – Banjara Hills</option>
+                    <option>Hyderabad – Secunderabad</option>
+                    <option>Warangal</option>
+                    <option>Karimnagar</option>
+                  </select>
+                </div>
+
+                <div class="field-group">
+                  <div class="label-row">
+                    <label id="lbl_adj_radius" data-i18n="pj.radius">Notification Radius</label>
+                    <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_adj_radius')">🔊</button>
+                  </div>
+                  <div class="radio-chips" id="adminRadiusChips" style="margin-top:4px">
+                    <div class="radio-chip" onclick="pickRadioChip('adminRadiusChips', this)">5 km</div>
+                    <div class="radio-chip active" onclick="pickRadioChip('adminRadiusChips', this)">10 km</div>
+                    <div class="radio-chip" onclick="pickRadioChip('adminRadiusChips', this)">15 km</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Animated radar map visual -->
+              <div class="map-visual">
+                <div class="map-rings">
+                  <div class="ring ring3"></div>
+                  <div class="ring ring2"></div>
+                  <div class="ring ring1"></div>
+                  <div class="map-pin">📍</div>
+                </div>
+                <div style="font-size:0.85rem;color:var(--muted)">
+                  Workers within <strong id="radiusDisplay" style="color:var(--accent)">10 km</strong> of your site will be notified
+                </div>
+              </div>
+
+              <div class="btn-row">
+                <button class="btn-secondary" type="button" onclick="goAdminJobStep(1)">← Back</button>
+                <button class="btn-primary" type="button" onclick="goAdminJobStep(3)">Review & Post →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 3: Confirm -->
+          <div id="adminJStep3" style="display:none">
+            <div class="form-card">
+              <div class="section-title" data-i18n="pj.s3">Confirm</div>
+              <div class="section-desc">Review all details before publishing this job to workers.</div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px" id="adminJobReviewGrid"></div>
+
+              <div class="live-banner">
+                <div class="live-dot"></div>
+                <div style="font-size:0.85rem">
+                  <strong>Registration opens immediately.</strong> Workers in your chosen radius can register until <strong style="color:var(--accent)">11:00 PM today</strong>. Registered worker list will activate <strong>1 hour before shift starts</strong>.
+                </div>
+              </div>
+
+              <div style="display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:12px;padding:16px;margin:20px 0">
+                <input type="checkbox" id="adminJobConsent" style="width:18px;height:18px;margin-top:2px;accent-color:var(--accent);flex-shrink:0" checked>
+                <div class="label-row">
+                  <label for="adminJobConsent" style="text-transform:none;letter-spacing:0;font-size:0.85rem;color:var(--muted);cursor:pointer" id="lbl_adj_consent" data-i18n="pj.consent">
+                    I confirm the job details and agree to the contractor terms of engagement.
+                  </label>
+                  <button class="speak-btn" type="button" onclick="speakLabelAloud(this, '#lbl_adj_consent')">🔊</button>
+                </div>
+              </div>
+
+              <div class="btn-row">
+                <button class="btn-secondary" type="button" onclick="goAdminJobStep(2)">← Back</button>
+                <button class="btn-primary" type="button" onclick="submitAdminJob()">
+                  <span data-i18n="pj.submit">🚀 Post Job Now</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ MY JOBS ══ -->
+        <div class="admin-page" id="admin-page-my-jobs">
+          <div class="page-header">
+            <div>
+              <div class="page-title" data-i18n="admin.myJobs">My Job Posts</div>
+              <div class="page-sub">All job requests you've posted and their active registrations.</div>
+            </div>
+            <button class="btn-primary" onclick="showAdminPage('post-job')">+ Post New</button>
+          </div>
+          <div class="job-cards" id="myJobsList"></div>
+        </div>
+
+        <!-- ══ REGISTERED WORKERS ══ -->
+        <div class="admin-page" id="admin-page-registered">
+          <div class="page-header">
+            <div>
+              <div class="page-title" data-i18n="admin.regWorkers">Registered Workers</div>
+              <div class="page-sub">Workers who signed up for your active jobs within your radius.</div>
+            </div>
+          </div>
+
+          <div class="filter-bar">
+            <div class="field-with-mic" style="width:280px">
+              <input type="text" id="workerSearchInput" data-i18n-ph="tbl.search.ph" placeholder="🔍 Search by name, mobile..." oninput="loadAdminRegisteredWorkers()">
+              <button class="mic-btn" type="button" onclick="startVoiceInput('workerSearchInput', this)" aria-label="Speak into field">🎤</button>
+            </div>
+            <select id="filterTradeSelect" onchange="loadAdminRegisteredWorkers()">
+              <option value="" data-i18n="tbl.allTrades">All Work Types</option>
+              <option>Construction & Building</option>
+              <option>Plumbing</option>
+              <option>Electrical Work</option>
+              <option>Carpentry & Furniture</option>
+              <option>Painting & Whitewashing</option>
+              <option>Welding & Fabrication</option>
+            </select>
+            <select id="filterStatusSelect" onchange="loadAdminRegisteredWorkers()">
+              <option value="" data-i18n="tbl.allStatuses">All Statuses</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Pending">Pending</option>
+            </select>
+          </div>
+
+          <div class="form-card" style="padding:0;overflow:hidden">
+            <div class="workers-table-wrap">
+              <table class="workers-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="tbl.worker">Worker</th>
+                    <th data-i18n="tbl.trade">Work Type</th>
+                    <th data-i18n="tbl.exp">Experience</th>
+                    <th data-i18n="tbl.distance">Distance</th>
+                    <th data-i18n="tbl.wage">Daily Rate</th>
+                    <th data-i18n="tbl.avail">Availability</th>
+                    <th data-i18n="tbl.status">Status</th>
+                    <th data-i18n="tbl.action">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="workersTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ LIVE WORK LIST ══ -->
+        <div class="admin-page" id="admin-page-live-list">
+          <div class="page-header">
+            <div>
+              <div class="page-title" data-i18n="live.title">Live Work List</div>
+              <div class="page-sub" data-i18n="live.sub">This live roster activates 1 hour before scheduled shift start.</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div class="live-dot"></div>
+              <span style="font-size:0.85rem;color:var(--accent2)" data-i18n="live.badge">Work starts in 58 minutes</span>
+            </div>
+          </div>
+
+          <div class="live-banner">
+            <div class="live-dot"></div>
+            <div style="font-size:0.88rem" data-i18n="live.alert">
+              Live list is active! Showing all confirmed workers ready for on-site check-in.
+            </div>
+          </div>
+
+          <div class="form-card" style="padding:0;overflow:hidden">
+            <div class="workers-table-wrap">
+              <table class="workers-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th data-i18n="tbl.worker">Worker</th>
+                    <th data-i18n="tbl.trade">Work Type</th>
+                    <th data-i18n="tbl.exp">Experience</th>
+                    <th>Skills</th>
+                    <th data-i18n="tbl.distance">Distance</th>
+                    <th>Contact</th>
+                    <th data-i18n="tbl.wage">Wage</th>
+                    <th>Arrival</th>
+                  </tr>
+                </thead>
+                <tbody id="liveTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
+            <button class="btn-primary" onclick="broadcastSmsToWorkers()">
+              <span data-i18n="live.smsBtn">📱 SMS All Workers</span>
+            </button>
+            <button class="btn-secondary" onclick="printDispatchRoster()">
+              <span data-i18n="live.pdfBtn">📥 Print / Save Dispatch PDF</span>
+            </button>
+            <button class="btn-secondary" onclick="copyRosterToClipboard()">
+              <span data-i18n="live.copyBtn">📋 Copy Contact Roster</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ══ SETTINGS ══ -->
+        <div class="admin-page" id="admin-page-settings">
+          <div class="page-header">
+            <div class="page-title" data-i18n="settings.title">Account Settings</div>
+          </div>
+          <div class="form-card">
+            <div class="section-title" data-i18n="settings.profile">Contractor Profile</div>
+            <div class="section-desc" data-i18n="settings.profileSub">Your official contact details shown on work offer dispatches.</div>
+
+            <div class="form-grid">
+              <div class="field-group">
+                <label data-i18n="settings.fullName">Full Name</label>
+                <input type="text" id="settingsFullName" value="Suresh Kumar">
+              </div>
+              <div class="field-group">
+                <label data-i18n="settings.mobile">Mobile Number</label>
+                <input type="tel" id="settingsMobile" value="+91 98765 43210">
+              </div>
+              <div class="field-group">
+                <label data-i18n="settings.company">Company / Contractor Name</label>
+                <input type="text" id="settingsCompany" value="SK Constructions Pvt Ltd">
+              </div>
+              <div class="field-group">
+                <label data-i18n="settings.gst">GST / Business ID</label>
+                <input type="text" id="settingsGst" placeholder="36AAAAA0000A1Z5">
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn-primary" onclick="saveAdminSettings()">
+                <span data-i18n="settings.save">Save Changes</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 4. MODALS & POPUPS                         -->
+  <!-- ========================================== -->
+
+  <!-- AUTH OTP MODAL -->
+  <div class="modal-overlay" id="authOtpModal">
+    <div class="modal-box">
+      <button class="modal-close-x" onclick="closeAuthModal()">✕</button>
+      <div class="modal-header-icon">📱</div>
+      <div class="modal-title" id="otpModalTitle">Worker Verification</div>
+      <div class="modal-sub" id="otpModalSub">Enter your mobile number to sign in or register.</div>
+
+      <!-- Step 1: Mobile Phone -->
+      <div id="otpPhoneStep">
+        <div class="field-group" style="margin-bottom:20px">
+          <label data-i18n="auth.mobile.label">Mobile Number</label>
+          <div class="field-with-mic">
+            <input type="tel" id="authMobileInput" data-i18n-ph="auth.mobile.ph" placeholder="Enter 10-digit mobile number" maxlength="10">
+            <button class="mic-btn" type="button" onclick="startVoiceInput('authMobileInput', this)" aria-label="Speak into field">🎤</button>
+          </div>
+        </div>
+        <button class="btn-primary" style="width:100%;justify-content:center" id="sendOtpBtn" onclick="requestOtp()">
+          <span data-i18n="auth.btn.sendOtp">Send OTP Via SMS</span>
+        </button>
+      </div>
+
+      <!-- Step 2: 6-Digit OTP -->
+      <div id="otpVerifyStep" style="display:none">
+        <div style="font-size:0.85rem;color:var(--muted);text-align:center;margin-bottom:12px">
+          Code sent to <strong id="otpSentToText" style="color:var(--text)">+91 ...</strong>
+        </div>
+
+        <div class="otp-container">
+          <input type="text" class="otp-digit" id="otp1" maxlength="1" oninput="handleOtpDigitInput(this, 'otp2', null)" onkeydown="handleOtpKeyDown(event, this, null)">
+          <input type="text" class="otp-digit" id="otp2" maxlength="1" oninput="handleOtpDigitInput(this, 'otp3', 'otp1')" onkeydown="handleOtpKeyDown(event, this, 'otp1')">
+          <input type="text" class="otp-digit" id="otp3" maxlength="1" oninput="handleOtpDigitInput(this, 'otp4', 'otp2')" onkeydown="handleOtpKeyDown(event, this, 'otp2')">
+          <input type="text" class="otp-digit" id="otp4" maxlength="1" oninput="handleOtpDigitInput(this, 'otp5', 'otp3')" onkeydown="handleOtpKeyDown(event, this, 'otp3')">
+          <input type="text" class="otp-digit" id="otp5" maxlength="1" oninput="handleOtpDigitInput(this, 'otp6', 'otp4')" onkeydown="handleOtpKeyDown(event, this, 'otp4')">
+          <input type="text" class="otp-digit" id="otp6" maxlength="1" oninput="handleOtpDigitInput(this, null, 'otp5')" onkeydown="handleOtpKeyDown(event, this, 'otp5')">
+        </div>
+
+        <div style="display:flex;justify-content:center;margin-bottom:18px">
+          <button class="sms-autofill-btn" type="button" onclick="autoFillOtp()" data-i18n="auth.btn.autofill">
+            ⚡ Auto-Fill Demo OTP
+          </button>
+        </div>
+
+        <button class="btn-primary" style="width:100%;justify-content:center" id="verifyOtpBtn" onclick="verifyEnteredOtp()">
+          <span data-i18n="auth.btn.verify">Verify & Continue</span>
+        </button>
+
+        <div style="text-align:center;margin-top:16px;font-size:0.8rem;color:var(--muted)">
+          <button id="resendOtpBtn" style="background:none;border:none;color:var(--accent);cursor:pointer;font-weight:600" onclick="requestOtp()">
+            <span data-i18n="auth.resend">Resend OTP in</span> <span id="otpTimerSpan"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN AUTH (PASSWORD OR SIGNUP) MODAL -->
+  <div class="modal-overlay" id="adminAuthModal">
+    <div class="modal-box">
+      <button class="modal-close-x" onclick="closeAuthModal()">✕</button>
+      <div class="modal-header-icon">💼</div>
+      <div class="modal-title" data-i18n="auth.admin.title">Admin Sign In</div>
+      <div class="modal-sub" data-i18n="auth.admin.sub">Access your contractor dashboard and job postings.</div>
+
+      <!-- Password Login Form -->
+      <div id="adminLoginForm">
+        <div class="field-group" style="margin-bottom:14px">
+          <label data-i18n="auth.mobile.label">Mobile Number</label>
+          <input type="tel" id="adminLoginMobile" placeholder="9876543210" value="9876543210">
+        </div>
+        <div class="field-group" style="margin-bottom:20px">
+          <label data-i18n="auth.admin.pwd.label">Password</label>
+          <input type="password" id="adminLoginPassword" placeholder="admin123" value="admin123">
+        </div>
+        <button class="btn-primary" style="width:100%;justify-content:center" onclick="handleAdminPasswordLogin()">
+          <span data-i18n="auth.admin.loginBtn">Sign In with Password</span>
+        </button>
+      </div>
+
+      <div style="text-align:center;margin-top:20px;font-size:0.82rem;color:var(--muted)" id="adminSignupTabPrompt">
+        <span>New admin or forgot password?</span><br>
+        <button style="background:none;border:none;color:var(--accent);cursor:pointer;font-weight:700;margin-top:4px" onclick="switchAdminAuthTab('otp')">
+          Sign In with Mobile OTP →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN SIGNUP BUSINESS DETAILS MODAL -->
+  <div class="modal-overlay" id="adminSignupDetailsModal">
+    <div class="modal-box">
+      <div class="modal-header-icon">🏢</div>
+      <div class="modal-title" data-i18n="auth.admin.signupTitle">Create Admin Account</div>
+      <div class="modal-sub" data-i18n="auth.admin.signupSub">Verify your mobile and set your business details.</div>
+
+      <div class="field-group" style="margin-bottom:12px">
+        <label data-i18n="auth.admin.name">Admin Full Name</label>
+        <input type="text" id="adminSignupName" placeholder="e.g. Suresh Kumar">
+      </div>
+      <div class="field-group" style="margin-bottom:12px">
+        <label data-i18n="auth.mobile.label">Mobile Number</label>
+        <input type="tel" id="adminSignupMobile" readonly style="opacity:0.7">
+      </div>
+      <div class="field-group" style="margin-bottom:12px">
+        <label data-i18n="auth.admin.pwd.label">Set Password</label>
+        <input type="password" id="adminSignupPassword" placeholder="Create secure password">
+      </div>
+      <div class="field-group" style="margin-bottom:12px">
+        <label data-i18n="auth.admin.company">Company / Contractor Name</label>
+        <input type="text" id="adminSignupCompany" placeholder="e.g. SK Constructions Pvt Ltd">
+      </div>
+      <div class="field-group" style="margin-bottom:20px">
+        <label data-i18n="settings.region">Primary Region</label>
+        <select id="adminSignupRegion">
+          <option>Hyderabad – Kukatpally</option>
+          <option>Hyderabad – Gachibowli</option>
+          <option>Hyderabad – Banjara Hills</option>
+          <option>Secunderabad</option>
+          <option>Warangal</option>
+        </select>
+      </div>
+      <button class="btn-primary" style="width:100%;justify-content:center" onclick="handleAdminDetailsSubmit()">
+        Create & Open Admin Portal
+      </button>
+    </div>
+  </div>
+
+  <!-- ADMIN JOB POSTED SUCCESS MODAL -->
+  <div class="modal-overlay" id="adminSuccessModal">
+    <div class="modal-box" style="text-align:center">
+      <div class="modal-header-icon">🚀</div>
+      <div class="modal-title" data-i18n="Job Posted!">Job Posted!</div>
+      <p class="modal-sub" data-i18n="Your job request is live. Workers in your area are being notified now.">
+        Your job request is live. Workers in your area are being notified now.
+      </p>
+      <div class="job-id-box" id="postedJobIdDisplay" style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--accent);margin-bottom:18px">JOB-000000</div>
+      <div style="display:flex;gap:12px;justify-content:center">
+        <button class="btn-primary" onclick="closeAdminSuccessModal(false)">View My Jobs</button>
+        <button class="btn-secondary" onclick="closeAdminSuccessModal(true)">Post Another</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIMULATED REALISTIC SMS DRAWER (Top-Right) -->
+  <div class="simulated-sms-banner" id="simulatedSmsBanner">
+    <div class="sms-header">
+      <span class="sms-badge">INCOMING SMS</span>
+      <span style="font-size:0.75rem;color:var(--muted)">Just now</span>
+    </div>
+    <div class="sms-text">
+      From <strong>DailyWork</strong> to +91 <span id="smsPhoneDisplay">...</span>:<br>
+      Your verification OTP code is:
+      <div class="sms-code-highlight" id="smsCodeHighlight">000000</div>
+      Valid for 10 minutes. Do not share with anyone.
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="sms-autofill-btn" onclick="autoFillOtp()">⚡ Auto-Fill Code</button>
+      <button class="btn-secondary" style="padding:6px 12px;font-size:0.75rem" onclick="closeSmsBanner()">Dismiss</button>
+    </div>
+  </div>
+
+  <!-- FLOATING LIVE NOTIFICATION TOAST (Admin Alerts) -->
+  <div class="live-notif-toast" id="liveNotifToast">
+    <div class="live-dot"></div>
+    <div>
+      <div style="font-weight:700;font-size:0.88rem;color:var(--accent2)" id="liveNotifTitle">New Notification</div>
+      <div style="font-size:0.78rem;color:var(--text)" id="liveNotifDesc">Details...</div>
+    </div>
+  </div>
+
+  <!-- TOAST MESSAGE -->
+  <div class="toast" id="toast"></div>
+
+  <!-- SCRIPT INCLUDES -->
+  <script src="/static/js/translations.js"></script>
+  <script src="/static/js/speech.js"></script>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

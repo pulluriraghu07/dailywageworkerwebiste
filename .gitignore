@@ -1,0 +1,44 @@
+# ========================================================
+# DailyWork - Git Ignore Configuration
+# ========================================================
+
+# 1. Environment variables & API keys (CRITICAL: NEVER COMMIT KEYS!)
+.env
+.env.local
+.env.*.local
+*token*.txt
+*password*.txt
+*.secret
+
+# 2. Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# 3. Local SQLite database (re-created automatically on first launch)
+dailywork.db
+*.db
+*.sqlite3
+
+# 4. Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# 5. IDE, Editors, and OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 6. Logs & temporary files
+*.log
+scratch/
